@@ -11,7 +11,7 @@ class Class(models.Model):
 	period = models.CharField(max_length=3)
 	prof = models.CharField(max_length=20)
 	title = models.CharField(max_length=30)
-	groups = models.ManyToManyField('Groups')
+	groups = models.ManyToManyField('Groups', blank=True)
 
 class UserBuddy(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)

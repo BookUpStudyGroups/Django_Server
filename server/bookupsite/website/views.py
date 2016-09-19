@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Class
-from .serializers import ClassSerializer
+from .models import Class, Groups
+from .serializers import ClassSerializer, GroupSerializer
 from django.http import HttpResponse
 
 # Create your views here.
@@ -20,3 +20,9 @@ class ClassList(APIView):
 
 	def post(self):
 		pass
+
+class GroupList(APIView):
+	def get(self, request):
+		groups = Groups.objects.all()
+		serializer = GroupSerializer(groups, many=True)
+		return Response(serializer.data)
