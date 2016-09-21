@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Class, Groups
+from .models import Class, Groups, UserBuddy
 from django.contrib.auth.models import User
 
 class ClassSerializer(serializers.Serializer):
@@ -31,8 +31,13 @@ class UserBuddySerializer(serializers.Serializer):
 	pk = serializers.IntegerField(read_only=True)
 	groups = serializers.StringRelatedField(many=True, allow_empty=True)
 	classes = serializers.StringRelatedField(many=True, allow_empty=True)
-	
-
+	user = serializers.StringRelatedField(allow_empty=True)
+	#class Meta:
+	#	model = User
+	#	fields = '__all__'
+	def create(self, validated_data):
+		return UserBuddy.objects.create(**validated_data)
+class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = User

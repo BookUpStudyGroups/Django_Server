@@ -18,7 +18,7 @@ class UserBuddy(models.Model):
 	
 	classes = models.ManyToManyField('Class')
 	groups = models.ManyToManyField('Groups')
-	buddies = models.ManyToManyField('StudyBuddy')
+	buddies = models.ManyToManyField('StudyBuddy', blank=True)
 	
 class Message(models.Model):
 	message = models.CharField(max_length=256)
