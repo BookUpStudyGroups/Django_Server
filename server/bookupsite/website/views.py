@@ -43,3 +43,11 @@ class StuddyBuddyList(APIView):
 		stdblist= StudyBuddy.objects.all()
 		serializer = StudyBuddyserlializer(stdblist, many=True)
 		return Response(serializer.data)
+	def post():
+		pass
+
+class MessageList(APIView):
+	def get(self, request):
+		messagelist = Message.objects.all()
+		serializer = MessageSerializer(messagelist, many=True)
+		return Response(serializer.data)

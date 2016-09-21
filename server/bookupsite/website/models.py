@@ -27,7 +27,7 @@ class Message(models.Model):
 	group = models.ForeignKey('Groups', on_delete=models.CASCADE,)
 class StudyBuddy(models.Model):
 	user1 = models.ForeignKey('UserBuddy', on_delete=models.CASCADE, related_name='user1')
-	user2 = models.ForeignKey('UserBuddy', on_delete=models.CASCADE, related_name='user2')
+	user2 = models.ForeignKey('UserBuddy', on_delete=models.CASCADE, related_name='user2', blank=True)
 	class1 = models.ForeignKey('Class', on_delete=models.CASCADE,)
 	
 	times = JSONField(blank = True)

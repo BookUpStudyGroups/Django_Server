@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Class, Groups, UserBuddy
+from .models import *
 from django.contrib.auth.models import User
 
 class ClassSerializer(serializers.Serializer):
@@ -48,3 +48,9 @@ class StudyBuddyserlializer(serializers.Serializer):
 	user1 = serializers.StringRelatedField(allow_empty=True)
 	user2 = serializers.StringRelatedField(allow_empty=True)
 	class1 = serializers.StringRelatedField(allow_empty=True)
+
+class MessageSerializer(serializers.Serializer):
+	pk = serializers.IntegerField(read_only= True)
+	date = serializers.DateTimeField()
+	author = serializers.StringRelatedField(allow_empty=False)
+	group = serializers.StringRelatedField(allow_empty=False)
