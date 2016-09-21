@@ -42,3 +42,9 @@ class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
 		fields = '__all__'
+
+class StudyBuddyserlializer(serializers.Serializer):
+	pk = serializers.IntegerField(read_only=True)
+	user1 = serializers.StringRelatedField(allow_empty=True)
+	user2 = serializers.StringRelatedField(allow_empty=True)
+	class1 = serializers.StringRelatedField(allow_empty=True)

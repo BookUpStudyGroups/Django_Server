@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Class, Groups, UserBuddy
-from .serializers import ClassSerializer, GroupSerializer, UserBuddySerializer
+from .models import *
+from .serializers import *
 from django.http import HttpResponse
 
 # Create your views here.
@@ -33,4 +33,13 @@ class UserList(APIView):
 	def get(self, request):
 		userlist = UserBuddy.objects.all()
 		serializer = UserBuddySerializer(userlist, many=True)
+		return Response(serializer.data)
+
+	def post(self):
+		pass
+
+class StuddyBuddyList(APIView):
+	def get(self, request):
+		stdblist= StudyBuddy.objects.all()
+		serializer = StudyBuddyserlializer(stdblist, many=True)
 		return Response(serializer.data)

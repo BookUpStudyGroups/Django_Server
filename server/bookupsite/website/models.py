@@ -30,7 +30,7 @@ class StudyBuddy(models.Model):
 	user2 = models.ForeignKey('UserBuddy', on_delete=models.CASCADE, related_name='user2')
 	class1 = models.ForeignKey('Class', on_delete=models.CASCADE,)
 	
-	times = JSONField()
+	times = JSONField(blank = True)
 class Groups(models.Model):
 	name = models.CharField(max_length=20)
 	size = models.IntegerField()
