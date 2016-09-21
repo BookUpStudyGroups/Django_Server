@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Class, Groups
+from django.contrib.auth.models import User
 
 class ClassSerializer(serializers.Serializer):
 	pk = serializers.IntegerField(read_only=True)
@@ -22,3 +23,17 @@ class GroupSerializer(serializers.Serializer):
 	latitude = serializers.DecimalField(max_digits=7, decimal_places=6)
 	longitude = serializers.DecimalField(max_digits=7, decimal_places=6)
 	priv = serializers.BooleanField()
+
+	def create(self, validated_data):
+		return Groups.objects.create(**validated_data)
+
+class UserBuddySerializer(serializers.Serializer):
+	pk = serializers.IntegerField(read_only=True)
+	groups = serializers.StringRelatedField(many=True, allow_empty=True)
+	classes = serializers.StringRelatedField(many=True, allow_empty=True)
+	
+
+
+	class Meta:
+		model = User
+		fields = '__all__'

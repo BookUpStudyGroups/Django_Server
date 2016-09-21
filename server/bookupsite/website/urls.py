@@ -6,6 +6,8 @@ urlpatterns = [
 	url(r'^$', views.index, name='index'),
 	url(r'^class$', views.ClassList.as_view()),
 	url(r'^group$', views.GroupList.as_view()),
+	url(r'^userz$', views.UserList.as_view()),
+
 
 ]
 
