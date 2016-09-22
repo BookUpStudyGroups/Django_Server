@@ -12,7 +12,7 @@ def index(request):
 	all_users = UserBuddy.objects.all()
 	html = ''
 	for userz in all_users:
-		url = '/bookupsite/' + str(userz.id) + '/'
+		url = '/bookupsite/userz/' + str(userz.id) + '/'
 		html += '<a href="' +url+ '">'+userz.user.username+'</a><br>'
 
 
@@ -21,6 +21,7 @@ def index(request):
 
 #lists all classes or creates a new one
 
+# returns individual objects from data base as JSON
 class indUser(APIView):
 	def get(self, request, user_id):
 		thisUser = UserBuddy.objects.get(pk=user_id)
@@ -38,6 +39,33 @@ class indClass(APIView):
 		pass
 
 
+class indBuddie(APIView):
+	def get(self, request, buddie_id):
+		thisbuddie = StudyBuddy.objects.get(pk=buddie_id)
+		serializer = StudyBuddyserlializer(thisbuddie)
+		return Response(serializer.data)
+
+	def post():
+		pass
+
+class indGroup(APIView):
+	def get(self, request, group_id):
+		thisgroup = Groups.objects.get(pk=group_id)
+		serializer = GroupSerializer(thisgroup)
+		return Response(serializer.data)
+	def post():
+		pass
+
+class indMessage(APIView):
+	def get(self, request, message_id):
+		thisMessage = Message.objects.get(pk=message_id)
+		serializer = GroupSerializer(thisMessage)
+		return Response(serializer.data)
+
+
+
+
+#Returns lists of objects from database as JSON
 
 class ClassList(APIView):
 	def get(self, request):

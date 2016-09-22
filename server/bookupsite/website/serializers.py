@@ -29,11 +29,12 @@ class GroupSerializer(serializers.Serializer):
 	def create(self, validated_data):
 		return Groups.objects.create(**validated_data)
 
-class UserBuddySerializer(serializers.ModelSerializer):
+class UserBuddySerializer(serializers.Serializer):
 	pk = serializers.IntegerField(read_only=True)
 	groups = serializers.StringRelatedField(many=True, allow_empty=True)
 	classes = serializers.StringRelatedField(many=True, allow_empty=True)
 	user = serializers.StringRelatedField(allow_empty=True)
+	buddies = serializers.StringRelatedField(allow_empty = True)
 
 	def create(self, validated_data):
 		return UserBuddy.objects.create(**validated_data)
@@ -44,7 +45,7 @@ class AllUserBuddySerializer(serializers.ModelSerializer):
 		depth = 1
 		fields = ('__all__')
 
-		
+
 class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
