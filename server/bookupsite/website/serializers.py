@@ -24,24 +24,33 @@ class GroupSerializer(serializers.Serializer):
 	longitude = serializers.DecimalField(max_digits=7, decimal_places=6)
 	priv = serializers.BooleanField()
 
+
+
 	def create(self, validated_data):
 		return Groups.objects.create(**validated_data)
 
-class UserBuddySerializer(serializers.Serializer):
+class UserBuddySerializer(serializers.ModelSerializer):
 	pk = serializers.IntegerField(read_only=True)
 	groups = serializers.StringRelatedField(many=True, allow_empty=True)
 	classes = serializers.StringRelatedField(many=True, allow_empty=True)
 	user = serializers.StringRelatedField(allow_empty=True)
-	#class Meta:
-	#	model = User
-	#	fields = '__all__'
+
 	def create(self, validated_data):
 		return UserBuddy.objects.create(**validated_data)
+
+class AllUserBuddySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = UserBuddy
+		depth = 1
+		fields = ('__all__')
+
+		
 class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = User
 		fields = '__all__'
+		depth = 2
 
 class StudyBuddyserlializer(serializers.Serializer):
 	pk = serializers.IntegerField(read_only=True)

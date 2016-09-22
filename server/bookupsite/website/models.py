@@ -13,24 +13,33 @@ class Class(models.Model):
 	title = models.CharField(max_length=30)
 	groups = models.ManyToManyField('Groups', blank=True)
 
+	def __unicode__ (self):
+		return '%s:%d:%s' % (self.department, self.number, self.prof)
+
 class UserBuddy(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	
 	classes = models.ManyToManyField('Class')
 	groups = models.ManyToManyField('Groups')
 	buddies = models.ManyToManyField('StudyBuddy', blank=True)
+
+	def __unicode__ (self):
+		return '%s' % (self.user.email)
 	
 class Message(models.Model):
 	message = models.CharField(max_length=256)
 	date = models.DateField(auto_now_add=True)
 	author = models.ForeignKey('UserBuddy', on_delete=models.CASCADE,)
 	group = models.ForeignKey('Groups', on_delete=models.CASCADE,)
+
+	
 class StudyBuddy(models.Model):
 	user1 = models.ForeignKey('UserBuddy', on_delete=models.CASCADE, related_name='user1')
 	user2 = models.ForeignKey('UserBuddy', on_delete=models.CASCADE, related_name='user2', blank=True)
 	class1 = models.ForeignKey('Class', on_delete=models.CASCADE,)
-	
 	times = JSONField(blank = True)
+
+
 class Groups(models.Model):
 	name = models.CharField(max_length=20)
 	size = models.IntegerField()
@@ -38,3 +47,6 @@ class Groups(models.Model):
 	latitude = models.DecimalField(max_digits=7, decimal_places=6)
 	longitude = models.DecimalField(max_digits=7, decimal_places=6)
 	priv = models.BooleanField()
+	def __unicode__ (self):
+		return '%s' % (self.name)
+
