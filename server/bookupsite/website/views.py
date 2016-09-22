@@ -19,6 +19,9 @@ def index(request):
 	#return HttpResponse("<h1>This is the bookup app homepage</h1>")
 	return HttpResponse(html)
 
+# TODO: add post classes
+#TODO: add authentication
+
 #lists all classes or creates a new one
 
 # returns individual objects from data base as JSON
