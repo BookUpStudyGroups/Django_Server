@@ -14,6 +14,16 @@ class ClassSerializer(serializers.Serializer):
 	def create(self, validated_data):
 		return Class.objects.create(**validated_data)
 
+	def update(self, instance, validated_data):
+		instance.department = validated_data.get('department', instance.department)
+		instance.number = validated_data.get('number', instance.number)
+		instance.period = validated_data.get('period', instance.period)
+		instance.prof = validated_data.get('prof', instance.prof)
+		instance.title = validated_data.get('title', instance.title)
+		instance.groups = validated_data.get('groups', instance.groups)
+		instance.save()
+		return instance
+
 
 class GroupSerializer(serializers.Serializer):
 	pk = serializers.IntegerField(read_only=True)
@@ -28,6 +38,18 @@ class GroupSerializer(serializers.Serializer):
 
 	def create(self, validated_data):
 		return Groups.objects.create(**validated_data)
+
+	def update(self, instance, validated_data):
+		instance.name = validated_data.get('name', instance.name)
+		instance.size = validated_data.get('size', instance.size)
+		instance.location = validated_data.get('location', instance.location)
+		instance.latitude = validated_data.get('latitude', instance.latitude)
+		instance.longitude = validated_data.get('longitude', instance.longitude)
+		instance.priv = validated_data.get('priv', instance.priv)
+		instance.save()
+		return instance
+
+
 
 class UserBuddySerializer(serializers.Serializer):
 	pk = serializers.IntegerField(read_only=True)
