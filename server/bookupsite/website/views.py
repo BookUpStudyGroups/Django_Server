@@ -37,6 +37,35 @@ def listOfClasses(request):
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['GET','PUT', 'DELETE'])
+def indClass(request, pk):
+
+	try:
+		myClass = Class.objects.get(pk=pk)
+	except Class.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
+	
+	if request.method == 'GET':
+		serializer = ClassSerializer(myClass)
+		return Response(serializer.data)
+	elif request.method == 'PUT':
+		serializer = ClassSerializer(myClass, data=request.data)
+		if serializer.isvalid():
+			serializer.save()
+			return Response(serializer.data)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	elif request.method == 'DELETE':
+		myClass.delete()
+		return Response(status=status.HTPP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
 # TODO: add post classes
 #TODO: add authentication
 
@@ -49,15 +78,15 @@ class indUser(APIView):
 		serializer = AllUserBuddySerializer(thisUser)
 		return Response(serializer.data)
 
-class indClass(APIView):
-	def get(self, request, class_id):
-		thisClass = Class.objects.get(pk=class_id)
-		serializer = ClassSerializer(thisClass)
-		return Response(serializer.data)
+#class indClass(APIView):
+#	def get(self, request, class_id):
+#		thisClass = Class.objects.get(pk=class_id)
+#		serializer = ClassSerializer(thisClass)
+#		return Response(serializer.data)
 
 
-	def post(self):
-		pass
+#	def post(self):
+#		pass
 
 
 class indBuddie(APIView):
