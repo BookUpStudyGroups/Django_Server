@@ -5,6 +5,8 @@ from rest_framework import status
 from .models import *
 from .serializers import *
 from django.http import HttpResponse
+from rest_framework.decorators import api_view
+
 
 # Create your views here.
 
@@ -18,6 +20,22 @@ def index(request):
 
 	#return HttpResponse("<h1>This is the bookup app homepage</h1>")
 	return HttpResponse(html)
+
+
+@api_view(['GET', 'POST'])
+def listOfClasses(request):
+
+	if (request.method == 'GET'):
+		classList = Class.objects.all()
+		serializer = ClassSerializer(classList, many=True)
+		return Response(serializer.data)
+
+	elif(request.method == 'POST'):
+		serializer = ClassSerializer(data=request.data)
+		if (serializer.isvalid()):
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # TODO: add post classes
 #TODO: add authentication
