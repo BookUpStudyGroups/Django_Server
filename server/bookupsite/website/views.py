@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import *
 from .serializers import *
@@ -21,49 +23,16 @@ def index(request):
 	#return HttpResponse("<h1>This is the bookup app homepage</h1>")
 	return HttpResponse(html)
 
+class ExampleView(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
 
-@api_view(['GET', 'POST'])
-def listOfClasses(request):
-
-	if (request.method == 'GET'):
-		classList = Class.objects.all()
-		serializer = ClassSerializer(classList, many=True)
-		return Response(serializer.data)
-
-	elif(request.method == 'POST'):
-		serializer = ClassSerializer(data=request.data)
-		if (serializer.isvalid()):
-			serializer.save()
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET','PUT', 'DELETE'])
-def indClass(request, pk):
-
-	try:
-		myClass = Class.objects.get(pk=pk)
-	except Class.DoesNotExist:
-		return Response(status=status.HTTP_404_NOT_FOUND)
-	
-	if request.method == 'GET':
-		serializer = ClassSerializer(myClass)
-		return Response(serializer.data)
-	elif request.method == 'PUT':
-		serializer = ClassSerializer(myClass, data=request.data)
-		if serializer.isvalid():
-			serializer.save()
-			return Response(serializer.data)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-	elif request.method == 'DELETE':
-		myClass.delete()
-		return Response(status=status.HTPP_204_NO_CONTENT)
-
-
-
-
-
-
+    def get(self, request, format=None):
+    	content = {
+            'user': unicode(request.user),  # `django.contrib.auth.User` instance.
+            'auth': unicode(request.auth),  # None
+        }
+        return Response(content)
 
 
 # TODO: add post classes
@@ -73,20 +42,28 @@ def indClass(request, pk):
 
 # returns individual objects from data base as JSON
 class indUser(APIView):
-	def get(self, request, user_id):
-		thisUser = UserBuddy.objects.get(pk=user_id)
-		serializer = AllUserBuddySerializer(thisUser)
+	authentication_classes = (SessionAuthentication, BasicAuthentication)
+	permission_classes = (IsAuthenticated,)
+
+	def get(self, request, user_id,  format=None):
+		test = UserBuddy.objects.filter(user__username=request.user)
+		thisUser = User.objects.all().select_related('userbuddy')
+		myUser = thisUser.get(username=request.user)
+		#test =myUser.get(id=1)	
+		serializer = AllUserBuddySerializer(test, many=True)
 		return Response(serializer.data)
 
-#class indClass(APIView):
-#	def get(self, request, class_id):
-#		thisClass = Class.objects.get(pk=class_id)
-#		serializer = ClassSerializer(thisClass)
-#		return Response(serializer.data)
+class indClass(APIView):
+	def get(self, request, pk):
+		thisClass = Class.objects.get(pk=pk)
+		serializer = ClassSerializer(thisClass)
+		return Response(serializer.data)
 
 
-#	def post(self):
-#		pass
+	#def perform_create()
+	
+	def post(self):
+		pass
 
 
 class indBuddie(APIView):

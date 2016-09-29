@@ -12,12 +12,16 @@ class Class(models.Model):
 	prof = models.CharField(max_length=20)
 	title = models.CharField(max_length=30)
 	groups = models.ManyToManyField('Groups', blank=True)
+	#owner = models.ForeignKey('auth.User', related_name='classy', blank=True)
+
+	#
+	#def save(self, *args, **kwargs):
 
 	def __unicode__ (self):
 		return '%s:%d:%s' % (self.department, self.number, self.prof)
 
 class UserBuddy(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userbuddy')
 	
 	classes = models.ManyToManyField('Class')
 	groups = models.ManyToManyField('Groups')
@@ -32,7 +36,7 @@ class Message(models.Model):
 	author = models.ForeignKey('UserBuddy', on_delete=models.CASCADE,)
 	group = models.ForeignKey('Groups', on_delete=models.CASCADE,)
 
-	
+
 class StudyBuddy(models.Model):
 	user1 = models.ForeignKey('UserBuddy', on_delete=models.CASCADE, related_name='user1')
 	user2 = models.ForeignKey('UserBuddy', on_delete=models.CASCADE, related_name='user2', blank=True)
