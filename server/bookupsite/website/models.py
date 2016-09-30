@@ -51,6 +51,7 @@ class Groups(models.Model):
 	latitude = models.DecimalField(max_digits=7, decimal_places=6)
 	longitude = models.DecimalField(max_digits=7, decimal_places=6)
 	priv = models.BooleanField()
+	class1 = models.ForeignKey('Class', on_delete=models.CASCADE, related_name = 'thisclass')
 	def __unicode__ (self):
 		return '%d:%s' % (self.id, self.name)
 

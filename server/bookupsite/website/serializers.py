@@ -33,7 +33,7 @@ class GroupSerializer(serializers.Serializer):
 	latitude = serializers.DecimalField(max_digits=7, decimal_places=6)
 	longitude = serializers.DecimalField(max_digits=7, decimal_places=6)
 	priv = serializers.BooleanField()
-
+	class1 = serializers.StringRelatedField(allow_empty=True)
 
 
 	def create(self, validated_data):
@@ -46,6 +46,7 @@ class GroupSerializer(serializers.Serializer):
 		instance.latitude = validated_data.get('latitude', instance.latitude)
 		instance.longitude = validated_data.get('longitude', instance.longitude)
 		instance.priv = validated_data.get('priv', instance.priv)
+
 		instance.save()
 		return instance
 

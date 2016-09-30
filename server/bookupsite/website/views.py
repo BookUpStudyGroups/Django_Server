@@ -35,8 +35,8 @@ class ExampleView(APIView):
         return Response(content)
 
 
-# TODO: add post classes
-#TODO: add authentication
+#TODO: add post classes
+
 
 #lists all classes or creates a new one
 
@@ -50,17 +50,19 @@ class indUser(APIView):
 		serializer = AllUserBuddySerializer(test, many=True)
 		return Response(serializer.data)
 
-class indClass(APIView):
-	def get(self, request, pk):
-		thisClass = Class.objects.get(pk=pk)
-		serializer = ClassSerializer(thisClass)
-		return Response(serializer.data)
+#class indClass(APIView):
+#	authentication_classes = (SessionAuthentication, BasicAuthentication)
+#	permission_classes = (IsAuthenticated,)
+#
+##		thisClass = Class.objects.get(pk=pk)
+#		serializer = ClassSerializer(thisClass)
+#		return Response(serializer.data)
 
 
 	#def perform_create()
 	
-	def post(self):
-		pass
+#	def post(self):
+#		pass
 
 
 class indBuddie(APIView):
@@ -120,16 +122,16 @@ class GroupList(APIView):
 
 	def post(self):
 		pass
-class UserList(APIView):
-	authentication_classes = (SessionAuthentication, BasicAuthentication)
-	permission_classes = (IsAuthenticated,)
-	def get(self, request):
-		userlist = UserBuddy.objects.all()
-		serializer = UserBuddySerializer(userlist, many=True)
-		return Response(serializer.data)
-
-	def post(self):
-		pass
+#class UserList(APIView):
+#	authentication_classes = (SessionAuthentication, BasicAuthentication)
+#	permission_classes = (IsAuthenticated,)
+#	def get(self, request):
+#		userlist = UserBuddy.objects.all()
+#		serializer = UserBuddySerializer(userlist, many=True)
+#		return Response(serializer.data)
+#
+#	def post(self):
+#		pass
 
 class StuddyBuddyList(APIView):
 	authentication_classes = (SessionAuthentication, BasicAuthentication)
@@ -148,5 +150,18 @@ class MessageList(APIView):
 	permission_classes = (IsAuthenticated,)
 	def get(self, request):
 		messagelist = Message.objects.filter(author__user__username=request.user)
+		serializer = MessageSerializer(messagelist, many=True)
+		return Response(serializer.data)
+
+
+
+
+#Still need to implement this
+#essentiall return the messages of a group if the user is part of that group
+class MessageListByGroup(APIView):
+	authentication_classes = (SessionAuthentication, BasicAuthentication)
+	permission_classes = (IsAuthenticated,)
+	def get(self,name, request):
+		messagelist = Message.objects.filter(group__name=name)
 		serializer = MessageSerializer(messagelist, many=True)
 		return Response(serializer.data)
