@@ -46,10 +46,7 @@ class indUser(APIView):
 	permission_classes = (IsAuthenticated,)
 
 	def get(self, request, user_id,  format=None):
-		test = UserBuddy.objects.filter(user__username=request.user)
-		thisUser = User.objects.all().select_related('userbuddy')
-		myUser = thisUser.get(username=request.user)
-		#test =myUser.get(id=1)	
+		test = UserBuddy.objects.filter(user__username=request.user)	
 		serializer = AllUserBuddySerializer(test, many=True)
 		return Response(serializer.data)
 
@@ -67,10 +64,13 @@ class indClass(APIView):
 
 
 class indBuddie(APIView):
+	authentication_classes = (SessionAuthentication, BasicAuthentication)
+	permission_classes = (IsAuthenticated,)
 	def get(self, request, buddie_id):
-		thisbuddie = StudyBuddy.objects.get(pk=buddie_id)
-		serializer = StudyBuddyserlializer(thisbuddie)
+		test = StudyBuddy.objects.filter(user1__user__username=request.user)
+		serializer = AllStudyBuddySerializer(test, many=True)
 		return Response(serializer.data)
+
 
 	def post():
 		pass

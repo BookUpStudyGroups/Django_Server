@@ -61,6 +61,15 @@ class UserBuddySerializer(serializers.Serializer):
 	def create(self, validated_data):
 		return UserBuddy.objects.create(**validated_data)
 
+class AllStudyBuddySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = StudyBuddy
+		depth = 2
+		fields = ('__all__')
+
+	
+		
+
 class AllUserBuddySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = UserBuddy
