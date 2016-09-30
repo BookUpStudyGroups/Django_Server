@@ -109,6 +109,7 @@ class ClassList(APIView):
 	def post(self):
 		pass
 
+
 class GroupList(APIView):
 	authentication_classes = (SessionAuthentication, BasicAuthentication)
 	permission_classes = (IsAuthenticated,)
@@ -133,10 +134,12 @@ class UserList(APIView):
 class StuddyBuddyList(APIView):
 	authentication_classes = (SessionAuthentication, BasicAuthentication)
 	permission_classes = (IsAuthenticated,)
-	def get(self, request):
-		stdblist= StudyBuddy.objects.all()
-		serializer = StudyBuddyserlializer(stdblist, many=True)
+	def get(self, request, buddie_id):
+		test = StudyBuddy.objects.filter(user1__user__username=request.user)
+		serializer = AllStudyBuddySerializer(test, many=True)
 		return Response(serializer.data)
+
+
 	def post():
 		pass
 
