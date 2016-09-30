@@ -76,6 +76,8 @@ class indBuddie(APIView):
 		pass
 
 class indGroup(APIView):
+	authentication_classes = (SessionAuthentication, BasicAuthentication)
+	permission_classes = (IsAuthenticated,)
 	def get(self, request, group_id):
 		thisgroup = Groups.objects.get(pk=group_id)
 		serializer = GroupSerializer(thisgroup)
@@ -84,6 +86,8 @@ class indGroup(APIView):
 		pass
 
 class indMessage(APIView):
+	authentication_classes = (SessionAuthentication, BasicAuthentication)
+	permission_classes = (IsAuthenticated,)
 	def get(self, request, message_id):
 		thisMessage = Message.objects.get(pk=message_id)
 		serializer = GroupSerializer(thisMessage)
@@ -95,6 +99,8 @@ class indMessage(APIView):
 #Returns lists of objects from database as JSON
 
 class ClassList(APIView):
+	authentication_classes = (SessionAuthentication, BasicAuthentication)
+	permission_classes = (IsAuthenticated,)
 	def get(self, request):
 		classes = Class.objects.all()
 		serializer = ClassSerializer(classes, many=True)
@@ -104,6 +110,8 @@ class ClassList(APIView):
 		pass
 
 class GroupList(APIView):
+	authentication_classes = (SessionAuthentication, BasicAuthentication)
+	permission_classes = (IsAuthenticated,)
 	def get(self, request):
 		groups = Groups.objects.all()
 		serializer = GroupSerializer(groups, many=True)
@@ -112,6 +120,8 @@ class GroupList(APIView):
 	def post(self):
 		pass
 class UserList(APIView):
+	authentication_classes = (SessionAuthentication, BasicAuthentication)
+	permission_classes = (IsAuthenticated,)
 	def get(self, request):
 		userlist = UserBuddy.objects.all()
 		serializer = UserBuddySerializer(userlist, many=True)
@@ -121,6 +131,8 @@ class UserList(APIView):
 		pass
 
 class StuddyBuddyList(APIView):
+	authentication_classes = (SessionAuthentication, BasicAuthentication)
+	permission_classes = (IsAuthenticated,)
 	def get(self, request):
 		stdblist= StudyBuddy.objects.all()
 		serializer = StudyBuddyserlializer(stdblist, many=True)
@@ -129,7 +141,9 @@ class StuddyBuddyList(APIView):
 		pass
 
 class MessageList(APIView):
+	authentication_classes = (SessionAuthentication, BasicAuthentication)
+	permission_classes = (IsAuthenticated,)
 	def get(self, request):
-		messagelist = Message.objects.all()
+		messagelist = Message.objects.filter(author__user__username=request.user)
 		serializer = MessageSerializer(messagelist, many=True)
-		return JSONResponse(serializer.data)
+		return Response(serializer.data)

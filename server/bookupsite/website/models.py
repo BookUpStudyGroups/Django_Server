@@ -33,7 +33,7 @@ class UserBuddy(models.Model):
 class Message(models.Model):
 	message = models.CharField(max_length=256)
 	date = models.DateField(auto_now_add=True)
-	author = models.ForeignKey('UserBuddy', on_delete=models.CASCADE,)
+	author = models.ForeignKey('UserBuddy', on_delete=models.CASCADE, related_name='author')
 	group = models.ForeignKey('Groups', on_delete=models.CASCADE,)
 
 
@@ -52,5 +52,5 @@ class Groups(models.Model):
 	longitude = models.DecimalField(max_digits=7, decimal_places=6)
 	priv = models.BooleanField()
 	def __unicode__ (self):
-		return '%s' % (self.name)
+		return '%d:%s' % (self.id, self.name)
 
