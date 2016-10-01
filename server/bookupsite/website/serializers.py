@@ -2,6 +2,12 @@ from rest_framework import serializers
 from .models import *
 from django.contrib.auth.models import User
 
+#####################################################
+#This file is to provide serialization for mdoels   #
+#returns information in JSON form                   #
+#can create and upate models in the database        #
+#####################################################
+
 class ClassSerializer(serializers.Serializer):
 	pk = serializers.IntegerField(read_only=True)
 	department = serializers.CharField(required=True, allow_blank=False, max_length=4)
@@ -9,7 +15,7 @@ class ClassSerializer(serializers.Serializer):
 	period = serializers.CharField(required=True, allow_blank=False,max_length=3)
 	prof = serializers.CharField(required=True, allow_blank=False,max_length=20)
 	title = serializers.CharField(required=True, allow_blank=False,max_length=30)
-	groups = serializers.StringRelatedField(many=True, allow_empty=True)
+	groups = serializers.StringRelatedField(many=True, required=False)
 
 	def create(self, validated_data):
 		return Class.objects.create(**validated_data)
@@ -20,9 +26,33 @@ class ClassSerializer(serializers.Serializer):
 		instance.period = validated_data.get('period', instance.period)
 		instance.prof = validated_data.get('prof', instance.prof)
 		instance.title = validated_data.get('title', instance.title)
-		instance.groups = validated_data.get('groups', instance.groups)
+		instance.groups = validated_data.get('groups', instance.groups, allow_blank=True)
 		instance.save()
 		return instance
+
+
+class BetterClassSerializer(serializers.ModelSerializer):
+	
+	class Meta:
+		model = Class
+		fields=('__all__')
+	def create(self, validated_data):
+		groups = serializers.PrimaryKeyRelatedField(many=True, queryset=Groups.objects.all())
+		post = Class(
+			department = validated_data['department'],
+			number = validated_data['number'],
+			period = validated_data['period'],
+			prof = validated_data['prof'],
+			title =validated_data['title'],
+			)
+		
+		post.save()
+
+		myList = validated_data['groups']
+		for i in myList:
+			post.groups.add(i)
+
+		return post
 
 
 class GroupSerializer(serializers.Serializer):
@@ -62,6 +92,7 @@ class UserBuddySerializer(serializers.Serializer):
 	def create(self, validated_data):
 		return UserBuddy.objects.create(**validated_data)
 
+#this is a special serializer as it will return layers of information
 class AllStudyBuddySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = StudyBuddy

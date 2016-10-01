@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
+from rest_framework import status, permissions
 from .models import *
 from .serializers import *
 from django.http import HttpResponse
@@ -12,6 +12,14 @@ from rest_framework.decorators import api_view
 
 # Create your views here.
 
+################################################################
+#Abstract: This file is handle requests based on a specific URL#
+#the majority of these classes are to return information for   #
+#the REST API, as the view returns JSON                        #
+#Here is also where functions for html and templates exist     #
+################################################################
+
+#basic html return for testing
 def index(request):
 	all_users = UserBuddy.objects.all()
 	html = ''
@@ -19,10 +27,9 @@ def index(request):
 		url = '/bookupsite/userz/' + str(userz.id) + '/'
 		html += '<a href="' +url+ '">'+userz.user.username+'</a><br>'
 
-
-	#return HttpResponse("<h1>This is the bookup app homepage</h1>")
 	return HttpResponse(html)
 
+#basic user authentication for testing
 class ExampleView(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
@@ -34,37 +41,23 @@ class ExampleView(APIView):
         }
         return Response(content)
 
-
-#TODO: add post classes
-
-
-#lists all classes or creates a new one
-
-# returns individual objects from data base as JSON
+#Returns information concerning the certain user
 class indUser(APIView):
 	authentication_classes = (SessionAuthentication, BasicAuthentication)
 	permission_classes = (IsAuthenticated,)
 
-	def get(self, request, user_id,  format=None):
+	def get(self, request,  format=None):
 		test = UserBuddy.objects.filter(user__username=request.user)	
 		serializer = AllUserBuddySerializer(test, many=True)
 		return Response(serializer.data)
+	def post(self, request, *args, **kwargs):
+		serializer = AllUserBuddySerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data,status = status.HTTP_201_CREATED)
+		return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
-#class indClass(APIView):
-#	authentication_classes = (SessionAuthentication, BasicAuthentication)
-#	permission_classes = (IsAuthenticated,)
-#
-##		thisClass = Class.objects.get(pk=pk)
-#		serializer = ClassSerializer(thisClass)
-#		return Response(serializer.data)
-
-
-	#def perform_create()
-	
-#	def post(self):
-#		pass
-
-
+#Returns information for a specific budy
 class indBuddie(APIView):
 	authentication_classes = (SessionAuthentication, BasicAuthentication)
 	permission_classes = (IsAuthenticated,)
@@ -74,9 +67,14 @@ class indBuddie(APIView):
 		return Response(serializer.data)
 
 
-	def post():
-		pass
+	def post(self,request, buddie_id, format=None):
+		serializer = AllStudyBuddySerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data,status = status.HTTP_201_CREATED)
+		return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
+#Returns information for a specific group
 class indGroup(APIView):
 	authentication_classes = (SessionAuthentication, BasicAuthentication)
 	permission_classes = (IsAuthenticated,)
@@ -86,7 +84,7 @@ class indGroup(APIView):
 		return Response(serializer.data)
 	def post():
 		pass
-
+#This is a problem child
 class indMessage(APIView):
 	authentication_classes = (SessionAuthentication, BasicAuthentication)
 	permission_classes = (IsAuthenticated,)
@@ -94,24 +92,26 @@ class indMessage(APIView):
 		thisMessage = Message.objects.get(pk=message_id)
 		serializer = GroupSerializer(thisMessage)
 		return Response(serializer.data)
-
-
-
-
-#Returns lists of objects from database as JSON
-
+	def post():
+		pass
+#returns all of the classes in the database
 class ClassList(APIView):
-	authentication_classes = (SessionAuthentication, BasicAuthentication)
-	permission_classes = (IsAuthenticated,)
+	#authentication_classes = (SessionAuthentication, BasicAuthentication)
+	#permission_classes = (IsAuthenticated,)
 	def get(self, request):
 		classes = Class.objects.all()
 		serializer = ClassSerializer(classes, many=True)
 		return Response(serializer.data)
 
-	def post(self):
-		pass
+	def post(self, request, *args, **kwargs):
+		serializer = BetterClassSerializer(data=request.data)
+		if(serializer.is_valid()):
+			serializer.save()
+			return Response(serializer.data,status = status.HTTP_201_CREATED)
+		return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
 
+#Returns all of the groups so the user may pick from them to join
 class GroupList(APIView):
 	authentication_classes = (SessionAuthentication, BasicAuthentication)
 	permission_classes = (IsAuthenticated,)
@@ -122,17 +122,7 @@ class GroupList(APIView):
 
 	def post(self):
 		pass
-#class UserList(APIView):
-#	authentication_classes = (SessionAuthentication, BasicAuthentication)
-#	permission_classes = (IsAuthenticated,)
-#	def get(self, request):
-#		userlist = UserBuddy.objects.all()
-#		serializer = UserBuddySerializer(userlist, many=True)
-#		return Response(serializer.data)
-#
-#	def post(self):
-#		pass
-
+#returns the list of study buddies that the user has
 class StuddyBuddyList(APIView):
 	authentication_classes = (SessionAuthentication, BasicAuthentication)
 	permission_classes = (IsAuthenticated,)
@@ -144,7 +134,7 @@ class StuddyBuddyList(APIView):
 
 	def post():
 		pass
-
+#returns all of the messages related to the user
 class MessageList(APIView):
 	authentication_classes = (SessionAuthentication, BasicAuthentication)
 	permission_classes = (IsAuthenticated,)

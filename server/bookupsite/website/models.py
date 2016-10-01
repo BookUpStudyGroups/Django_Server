@@ -4,6 +4,8 @@ from django.contrib.postgres.fields import JSONField
 
 from django.db import models
 
+#ToDo
+#implement a study buddy request
 
 class Class(models.Model):
 	department = models.CharField(max_length=4)
@@ -11,7 +13,7 @@ class Class(models.Model):
 	period = models.CharField(max_length=3)
 	prof = models.CharField(max_length=20)
 	title = models.CharField(max_length=30)
-	groups = models.ManyToManyField('Groups', blank=True)
+	groups = models.ManyToManyField('Groups', blank=True, related_name='groups')
 	#owner = models.ForeignKey('auth.User', related_name='classy', blank=True)
 
 	#
@@ -23,7 +25,7 @@ class Class(models.Model):
 class UserBuddy(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userbuddy')
 	
-	classes = models.ManyToManyField('Class')
+	classes = models.ManyToManyField('Class', blank=True)
 	groups = models.ManyToManyField('Groups')
 	buddies = models.ManyToManyField('StudyBuddy', blank=True)
 
